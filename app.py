@@ -1,25 +1,35 @@
-from dash import Dash, dcc, html, Input, Output, callback
-import os
+from dash import Dash, dcc, html, Input, Output
+import plotly.express as px
 
+app = Dash(__name__)
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-
-app = Dash(__name__, external_stylesheets=external_stylesheets)
-
-server = app.server
 
 app.layout = html.Div([
-    html.H1('Hello World'),
-    dcc.Dropdown(['LA', 'NYC', 'MTL'],
-        'LA',
-        id='dropdown'
+    html.H4('Polotical candidate voting pool analysis'),
+    html.P("Select a candidate:"),
+    dcc.RadioItems(
+        id='candidate',
+        options=["Joly", "Coderre", "Bergeron"],
+        value="Coderre",
+        inline=True
     ),
-    html.Div(id='display-value')
+    dcc.Graph(id="graph"),
 ])
 
-@callback(Output('display-value', 'children'), Input('dropdown', 'value'))
-def display_value(value):
-    return f'You have selected {value}'
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.callback(
+    Output("graph", "figure"),
+    Input("candidate", "value"))
+def display_choropleth(candidate):
+    df = px.data.election() # replace with your own data source
+    geojson = px.data.election_geojson()
+    fig = px.choropleth(
+        df, geojson=geojson, color=candidate,
+        locations="district", featureidkey="properties.district",
+        projection="mercator", range_color=[0, 6500])
+    fig.update_geos(fitbounds="locations", visible=False)
+    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+    return fig
+
+
+app.run_server(debug=True)
