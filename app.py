@@ -104,10 +104,10 @@ columnDefs = [
     { 'field': 'Artsy' },
     { 'field': 'Latitude' },
     { 'field': 'Longitude' },
-    { 'field': 'Review' },
+    { 'field': 'Score' },
     { 'field': 'total' },
 ]
-df = pd.read_csv('./updated_df.csv')
+df = pd.read_csv('./updated_df.csv').rename(dict(Review='Score'))
 grid = dag.AgGrid(
     id="get-started-example-basic",
     rowData=df.to_dict("records"),
