@@ -136,6 +136,9 @@ app.layout = html.Div([
 
     # AG grid
     aggrid,
+    html.Br(),
+    html.Br(),
+    html.Br(),
 ])
 
 if __name__ == '__main__':
