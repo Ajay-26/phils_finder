@@ -3,3 +3,5 @@ pandas
 gunicorn===21.2.0
 plotly
 dash-bootstrap-components
+dash-mantine-components
+dash-ag-grid
